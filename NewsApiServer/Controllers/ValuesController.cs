@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BLL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Model.Models;
 
 namespace NewsApiServer.Controllers
 {
@@ -10,16 +12,23 @@ namespace NewsApiServer.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        private readonly INewsService _newsService;
+        public ValuesController(INewsService service)
+        {
+            _newsService = service;
+        }
+
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<NewsModel>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var res = _newsService.GetAll(); // ASYNC ASYNC ASYNC ASYNC ASYNC ASYNC ASYNC ASYNC ASYNC ASYNC ASYNC ASYNC ASYNC ASYNC
+            return res;
         }
 
         // GET api/values/5
         [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        public ActionResult<NewsModel> Get(int id)
         {
             return "value";
         }
