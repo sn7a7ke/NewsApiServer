@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using Newtonsoft.Json;
 
 namespace Model.Models
@@ -8,20 +9,20 @@ namespace Model.Models
     public class NewsModel : EntityBase
     {
 
-        //[DataMember]
         [JsonProperty("title")]
         public string Title { get; set; }
 
-        //[DataMember]
         [JsonProperty("body")]
         public string Body { get; set; }
 
-        //[DataMember]
         [JsonProperty("createTime")]
         public string CreateTime { get; set; }
 
-        //[DataMember]
-        public virtual  TopicModel Topic { get; set; }
+        [JsonProperty("topicId")]
+        public int TopicId { get; set; }
+        [JsonProperty("topic")]
+        [ForeignKey("TopicId")]
+        public virtual TopicModel Topic { get; set; }
     }
     public class GetNewsModelView
     {

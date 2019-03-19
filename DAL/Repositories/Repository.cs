@@ -7,6 +7,7 @@ using System.Collections.Generic;
 //using System.Data.Entity;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DAL.Repositories
 {
@@ -22,60 +23,91 @@ namespace DAL.Repositories
             DbSet = Context.Set<TEntity>(); // C or c?
         }
 
-        public IEnumerable<TEntity> GetAll()
+        public virtual IEnumerable<TEntity> GetAll()
         {
-            var result = DbSet; // .ToList();
+            var result = DbSet.ToList();
             return result;
         }
 
-        public TEntity Get(int id)
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
+        {
+            var result = await DbSet.ToListAsync(); // .ToList();
+            return result;
+        }
+
+        public virtual TEntity Get(int id)
         {
             var entry = DbSet.FirstOrDefault(e => e.Id == id);
             if (entry == null)
-                throw new RecordNotFoundException();
+                throw new EntityNotFoundException();
             return entry;
         }
 
-        public TEntity Add(TEntity entity)
+        public virtual async Task<TEntity> GetAsync(int id)
         {
-            //DbSet.Add(entity);
-            //var result = DbSet.FirstOrDefault(e => e.Id == entity.Id);
-            //return result;
-            
-            
-            // === NULL??? ===
+            var entry = await DbSet.FirstOrDefaultAsync(e => e.Id == id);
+            if (entry == null)
+                throw new EntityNotFoundException();
+            return entry;
+        }
 
+        public virtual TEntity Add(TEntity entity)
+        {
             var result = DbSet.Add(entity);
             return result.Entity;
         }
 
-        public TEntity Update(TEntity entity)
+        public virtual async Task<TEntity> AddAsync(TEntity entity)
+        {
+            var result = await DbSet.AddAsync(entity);
+            return result.Entity;
+        }
+
+        public virtual TEntity Update(TEntity entity)
         {
             var dbEntry = DbSet.FirstOrDefault(e => e.Id == entity.Id);
             if (dbEntry == null)
-                throw new RecordNotFoundException();
-
+                throw new EntityNotFoundException();
             MapThem(dbEntry, entity);
-
             return dbEntry;
-
-            // db.Entry(oneNews).State = EntityState.Modified;
         }
 
-        public void Delete(int id)
+        public virtual async Task<TEntity> UpdateAsync(TEntity entity)
+        {
+            var dbEntry = await DbSet.FirstOrDefaultAsync(e => e.Id == entity.Id);
+            if (dbEntry == null)
+                throw new EntityNotFoundException();
+            MapThem(dbEntry, entity);
+            return dbEntry;
+        }
+
+        public virtual void Delete(int id)
         {
             var entry = DbSet.FirstOrDefault(e => e.Id == id);
             if (entry == null)
-                throw new RecordNotFoundException();
+                throw new EntityNotFoundException();
+            DbSet.Remove(entry);
+        }
+
+        public virtual async Task DeleteAsync(int id)
+        {
+            var entry = await DbSet.FirstOrDefaultAsync(e => e.Id == id);
+            if (entry == null)
+                throw new EntityNotFoundException();
             DbSet.Remove(entry);
         }
 
         public abstract void MapThem(TEntity source, TEntity change);
 
-        public void Delete(TEntity entity) // Delete(entity.id); ???
+        public virtual void Delete(TEntity entity) // Delete(entity.id); ???
         {
             DbSet.Attach(entity);
             Context.Entry(entity).State = EntityState.Deleted;
+        }
+
+        public virtual async Task DeleteAsync(TEntity entity)
+        {
+            await Task.Run(() => Delete(entity));
         }
     }
 }

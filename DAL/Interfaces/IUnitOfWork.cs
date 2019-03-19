@@ -1,5 +1,6 @@
 ﻿using DAL.Repositories;
 using System;
+using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -8,5 +9,6 @@ namespace DAL
         NewsRepository News { get; }
         TopicsRepository Topics { get; }
         void Save();
+        Task SaveAsync();
     }
 }

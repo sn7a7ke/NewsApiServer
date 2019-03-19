@@ -11,6 +11,11 @@ namespace Model.Models
     //[DataContract]
     public class TopicModel : EntityBase
     {
+        public TopicModel()
+        {
+            News = new List<NewsModel>();
+        }
+
         //public TopicModel()
         //{
         //    News = new List<NewsModel>();

@@ -4,19 +4,19 @@ using System.Text;
 
 namespace DAL.Exceptions
 {
-    class RecordNotFoundException : Exception // не найдено что??? record? params table, id? логирование ошибок где?
+    public class EntityNotFoundException : Exception // не найдено что??? record? params table, id? логирование ошибок где?
     {
         private readonly string[] _errors;
 
-        public RecordNotFoundException(params string[] errors)
+        public EntityNotFoundException(params string[] errors)
         {
             this._errors = errors;
         }
-        public RecordNotFoundException(string message)
+        public EntityNotFoundException(string message)
             : base(message)
         {
         }
-        public RecordNotFoundException(string message, Exception innerException)
+        public EntityNotFoundException(string message, Exception innerException)
             : base(message, innerException)
         {
         }

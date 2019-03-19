@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using DAL.Context;
 using DAL.Interfaces;
 using DAL.Repositories;
@@ -13,16 +14,15 @@ namespace DAL
         private NewsRepository _newsRepository;
         private TopicsRepository _topicsRepository;
 
-        public UnitOfWork(NewsContext context)
-        {
-            _db = context;
-        }
+        public UnitOfWork(NewsContext context) => _db = context;
 
         public NewsRepository News => _newsRepository ?? (_newsRepository = new NewsRepository(_db));
 
         public TopicsRepository Topics => _topicsRepository ?? (_topicsRepository = new TopicsRepository(_db));
 
         public void Save() => _db.SaveChanges();
+
+        public async Task SaveAsync() => await _db.SaveChangesAsync();
 
         private bool disposed = false;
         
